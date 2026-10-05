@@ -6,22 +6,32 @@
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:49:30 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/05 17:32:24 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/05 21:57:34 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
 
+// TODO: FIX THIS FUNCTION TO SHOW THE CORRECT ADDRESSES AND BYTES USED
+
 MALLOC_NONNULL(1)
 static void	show_mem_zone(t_zone *zone)
 {
+	t_block	*current_block;
+
 	if (zone->type == TINY)
 		ft_putstr_fd("TINY : \0", DEFAULT_FD);
 	if (zone->type == SMALL)
 		ft_putstr_fd("SMALL : \0", DEFAULT_FD);
 	if (zone->type == LARGE)
 		ft_putstr_fd("LARGE : \0", DEFAULT_FD);
-	ft_printf("%p", zone);
+	ft_printf("%p\n", zone);
+	current_block = zone->blocks;
+	while (current_block)
+	{
+		ft_printf("%p - %p : %d bytes\n", current_block, current_block->next, current_block->size);
+		current_block = current_block->next;
+	}
 }
 
 void	show_alloc_mem(void)
