@@ -2,7 +2,12 @@
 NAME = a.out
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iinc -Ilibft/inc
+
+# TODO: Add flags -Wall -Wextra -Werror
+CFLAGS = -Iinc -Ilibft/inc
+
+# TODO: Check with fsanitize
+# TODO: Make rules to compile debug mode ...
 
 INC_FOLDER = inc
 

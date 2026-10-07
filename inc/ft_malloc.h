@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_malloc.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
+/*   By: jvizcain <jvizcain@students.42madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:42:19 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/05 19:57:39 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/07 20:08:52 by jvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,15 @@
 /**
  * @brief	The size of a tiny zone. The header size is included in the result
  * 			(sizeof(t_block)).
- * @example	TINY_MAX = 128 -> TINY_ZONE_SIZE = 16.384
+ * @example	TINY_MAX = 128; sizeof(t_block) = 32 -> TINY_ZONE_SIZE = 16.000.
+ * @note	It is the raw value, not the multiple of PAGESIZE.
  */
 # define TINY_ZONE_SIZE		(BLOCKS_PER_ZONE * (TINY_MAX + sizeof(t_block)))
 /**
  * @brief	The size of a tiny zone. The header size is included in the result
  * 			(sizeof(t_block)).
- * @example	TINY_MAX = 1024 -> TINY_ZONE_SIZE = 106.496
+ * @example	TINY_MAX = 1024; sizeof(t_block) = 32 -> TINY_ZONE_SIZE = 105.600.
+ * @note	It is the raw value, not the multiple of PAGESIZE.
  */
 # define SMALL_ZONE_SIZE	(BLOCKS_PER_ZONE * (SMALL_MAX + sizeof(t_block)))
 
@@ -66,7 +68,12 @@ typedef struct s_block
 /**
  * @brief	Size type of the different blocks inside the zone.
  */
-typedef enum zone_type {TINY, SMALL, LARGE} t_zone_type;
+typedef enum zone_type
+{
+	TINY,
+	SMALL,
+	LARGE
+}	t_zone_type;
 
 /**
  * @brief	The giant block reserved
@@ -92,6 +99,7 @@ typedef struct s_reserved_zones
 
 /**
  * @brief	Global variable with all the reserved zones.
+ * @note	It is allowed by the subject.
  */
 extern t_reserved_zones	g_zones;
 
@@ -105,6 +113,37 @@ void	show_alloc_mem(void);
 
 // ----------------------------------------------------------------------------
 
-t_zone	*create_zone(size_t bytes);
+/**
+ * @brief	Creates a memory zone by mapping with the requested bytes. The user
+ * 			should know the type and the exact bytes needed before using this
+ * 			function.
+ * @param	total_aligned_bytes	The number of bytes the new zone will
+ * 								be having.
+ * @param	type	The type of blocks the zone will be having.
+ * @note	`total_aligned_bytes` should be the aligned bytes quantity. 
+ * 			It is not the function's job to calculate which number of
+ * 			bytes adjustes better to the specified ones.
+ */
+t_zone	*create_zone(const size_t total_aligned_bytes, const t_zone_type type);
+
+/**
+ * @brief	Calcs the exact needed bytes for a tiny zone.
+ * @returns	The exact needed bytes for a tiny zone.
+ */
+size_t	get_tiny_zone_size(void);
+
+/**
+ * @brief	Calcs the exact needed bytes for a small zone.
+ * @returns	The exact needed bytes for a small zone.
+ */
+size_t	get_small_zone_size(void);
+
+/**
+ * @brief	Calcs the exact needed bytes for a large zone.
+ * @param	requested_bytes The number of bytes the large zone will be having.
+ * 							This number should not include the headers.
+ * @returns	The exact needed bytes for a large zone.
+ */
+size_t	get_large_zone_size(const size_t requested_bytes);
 
 #endif
