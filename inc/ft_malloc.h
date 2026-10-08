@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_malloc.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvizcain <jvizcain@students.42madrid.co    +#+  +:+       +#+        */
+/*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:42:19 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/07 20:08:52 by jvizcain         ###   ########.fr       */
+/*   Updated: 2026/10/08 15:06:45 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,15 @@
 # include "get_next_line.h"
 
 # define DEFAULT_FD 1
-# define ERR_FD 2
+# define ERR_FD 	2
+
+# define TRUE		1
+# define FALSE		0
+
+/**
+ * @brief	Memory alignment requirement in bytes (16 bytes for 64-bit systems).
+ */
+# define ALIGNMENT	16
 
 /**
  * @brief	Requested by the subject. The minimum number of blocks that
@@ -114,17 +122,30 @@ void	show_alloc_mem(void);
 // ----------------------------------------------------------------------------
 
 /**
- * @brief	Creates a memory zone by mapping with the requested bytes. The user
- * 			should know the type and the exact bytes needed before using this
- * 			function.
- * @param	total_aligned_bytes	The number of bytes the new zone will
- * 								be having.
- * @param	type	The type of blocks the zone will be having.
- * @note	`total_aligned_bytes` should be the aligned bytes quantity. 
- * 			It is not the function's job to calculate which number of
- * 			bytes adjustes better to the specified ones.
+ * @brief	Creates a new memory zone and appends it to the global zone list.
+ *
+ * Calculates the appropriate page-aligned total size for the given zone type,
+ * allocates the memory via `create_zone`, and links the newly created `t_zone`
+ * to the end of the corresponding list in `g_zones` (or sets it as the head
+ * if the list was empty).
+ *
+ * @param	aligned_bytes	User-requested memory size rounded to `ALIGNMENT`.
+ * @param	type			Category of the zone (`TINY`, `SMALL`, or `LARGE`).
+ *
+ * @return	Pointer to the newly created and linked `t_zone`, or `NULL` if 
+ *			allocation via `create_zone` failed.
  */
-t_zone	*create_zone(const size_t total_aligned_bytes, const t_zone_type type);
+t_zone	*link_new_zone(const size_t aligned_bytes, const t_zone_type type);
+
+/**
+ * @brief	Gets a block of memory with the ammount of bytes requested.
+ * @param	requested_bytes	The ammount of bytes requested.
+ * @returns	A block that has at least that ammount of bytes.
+ * @note	For efficency, the returned block size will be a multiple
+ * 			of `ALIGNMENT`.
+ */
+MALLOC_UNUSED_RESULT
+t_block	*request_block(const size_t requested_bytes);
 
 /**
  * @brief	Calcs the exact needed bytes for a tiny zone.
@@ -145,5 +166,59 @@ size_t	get_small_zone_size(void);
  * @returns	The exact needed bytes for a large zone.
  */
 size_t	get_large_zone_size(const size_t requested_bytes);
+
+/**
+ * @brief	Returns the zone type that matches the requested bytes.
+ * @param	requested_bytes	The number of bytes requested.
+ * @returns	The zone type that matches `bytes`.
+ */
+t_zone_type	get_zone_type(const size_t requested_bytes);
+
+/**
+ * @brief	Gets the address of the head of the zone list from
+ * 			the global structure that matches the provided zone type.
+ * @param	type	The type of the desired zone.
+ * @returns	The address of the zone list that matched the type.
+ * @note	The returned zone can be `NULL`, that means it is not initialized.
+ */
+MALLOC_UNUSED_RESULT MALLOC_RETURNS_NONNULL
+t_zone		**get_zone_list_by_type(const t_zone_type type);
+
+/**
+ * @brief	Alignes the number of bytes provided to a multiple of the variable
+ * 			`ALIGNMENT`, for more efficency.
+ * @param	bytes	The number of bytes provided.
+ * @returns	The first multiple of the variable `ALIGNMENT` that is bigger than
+ * 			`bytes`.
+ */
+size_t	align_bytes(const size_t bytes);
+
+/**
+ * @brief	Prepares and marks an already located free block as occupied.
+ *
+ * Checks if the available block can be split into two (the requested size
+ * and the remaining free space). If eligible, performs the split operation
+ * before updating the `is_free` flag to mark the block as active.
+ *
+ * @param	block	Pointer to the target free memory block.
+ * @param	aligned_bytes	User-requested memory size rounded to `ALIGNMENT`.
+ *
+ * @return	Pointer to the prepared `t_block` marked as occupied.
+ */
+t_block	*allocate_existing_block(t_block *block, const size_t aligned_bytes);
+
+/**
+ * @brief	Allocates a new zone, appends it to g_zones, and claims its first block.
+ *
+ * Called when no existing zone has a free block large enough for the request.
+ * Creates a new `t_zone` via mmap, links it to the corresponding global list in
+ * `g_zones`, and delegates the initial block split/assignment to `claim_block`.
+ *
+ * @param	type	Category of the zone (`TINY`, `SMALL`, or `LARGE`).
+ * @param	aligned_bytes	User-requested memory size rounded to `ALIGNMENT`.
+ *
+ * @return	Pointer to the assigned `t_block`, or `NULL` if zone creation failed.
+ */
+t_block	*allocate_from_new_zone(const t_zone_type type, const size_t aligned_bytes);
 
 #endif

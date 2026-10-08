@@ -1,10 +1,12 @@
 # TODO: Must check the existence of the environment variable $HOSTTYPE
 NAME = a.out
 
-CC = cc
+CC = gcc -g
 
 # TODO: Add flags -Wall -Wextra -Werror
 CFLAGS = -Iinc -Ilibft/inc
+
+FSANITIZE_FLAG = -fsanitize=address
 
 # TODO: Check with fsanitize
 # TODO: Make rules to compile debug mode ...
@@ -17,16 +19,21 @@ LIBFT = libft/libft.a
 
 
 SRCS = main.c \
+		src/malloc/allocations.c \
+		src/malloc/block_utils.c \
+		src/malloc/ft_malloc.c \
+		src/zones/link_zone.c \
+		src/zones/zone_sizes.c \
+		src/zones/zone_getters.c \
 		src/globals.c \
-    	src/show_alloc_mem.c \
-		src/zone_utils.c
+    	src/show_alloc_mem.c
 
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_FOLDER)

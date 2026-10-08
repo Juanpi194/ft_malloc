@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   globals.c                                          :+:      :+:    :+:   */
+/*   ft_malloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/05 13:46:46 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/08 15:19:02 by juanpi194        ###   ########.fr       */
+/*   Created: 2026/10/05 13:47:14 by juanpi194         #+#    #+#             */
+/*   Updated: 2026/10/08 15:00:41 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
 
-t_reserved_zones	g_zones = {NULL, NULL, NULL};
-
-size_t	align_bytes(const size_t bytes)
+void	*malloc(size_t size)
 {
-	size_t	counter;
+	const t_zone_type	type = get_zone_type(size);
+	t_block				*block;
 
-	counter = 0;
-	if (bytes == 0)
-		return ((size_t)ALIGNMENT);
-	while ((size_t)ALIGNMENT * counter < bytes)
-		counter++;
-	return (ALIGNMENT * counter);
+	if (size == 0)
+		return (NULL);
+	block = request_block(size);
+	if (!block)
+		return (NULL);
+	return ((void *)(block + 1));
 }

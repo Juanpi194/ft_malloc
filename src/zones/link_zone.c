@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   zone_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvizcain <jvizcain@students.42madrid.co    +#+  +:+       +#+        */
+/*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:48:49 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/07 20:02:00 by jvizcain         ###   ########.fr       */
+/*   Updated: 2026/10/08 15:21:50 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
-
-/**
- * @brief	Returns the zone type that matches the requested bytes.
- * @param	requested_bytes	The number of bytes requested.
- * @returns	The zone type that matches `bytes`.
- */
-static t_zone_type	get_zone_type(size_t requested_bytes)
-{
-	if (requested_bytes <= TINY_MAX)
-		return (TINY);
-	else if (requested_bytes <= SMALL_MAX)
-		return (SMALL);
-	else
-		return (LARGE);
-}
 
 /**
  * @brief	Initializes the values of the created zone.
@@ -34,7 +19,7 @@ static t_zone_type	get_zone_type(size_t requested_bytes)
  * @param	bytes	The bytes the zone will be using (aligned).
  * @param	type	The type of memory blocks the zone has.
  */
-static void	init_zone(t_zone *zone, size_t bytes, t_zone_type type)
+static void	init_zone(t_zone *zone, size_t bytes, const t_zone_type type)
 {
 	t_block	*start_block;
 
@@ -51,7 +36,19 @@ static void	init_zone(t_zone *zone, size_t bytes, t_zone_type type)
 	zone->blocks = start_block;
 }
 
-t_zone	*create_zone(const size_t total_aligned_bytes, const t_zone_type type)
+/**
+ * @brief	Creates a memory zone by mapping with the requested bytes. The user
+ * 			should know the type and the exact bytes needed before using this
+ * 			function.
+ * @param	total_aligned_bytes	The number of bytes the new zone will
+ * 								be having.
+ * @param	type	The type of blocks the zone will be having.
+ * @note	`total_aligned_bytes` should be the aligned bytes quantity. 
+ * 			It is not the function's job to calculate which number of
+ * 			bytes adjustes better to the specified ones.
+ */
+MALLOC_UNUSED_RESULT
+static t_zone	*create_zone(const size_t total_aligned_bytes, const t_zone_type type)
 {
 	t_zone	*zone;
 
@@ -61,4 +58,33 @@ t_zone	*create_zone(const size_t total_aligned_bytes, const t_zone_type type)
 		return (NULL);
 	init_zone(zone, total_aligned_bytes, type);
 	return (zone);
+}
+
+t_zone	*link_new_zone(const size_t aligned_bytes, const t_zone_type type)
+{
+	t_zone	**zone_list_head;
+	t_zone	*new_zone;
+	t_zone	*current;
+	size_t	zone_size;
+
+	zone_list_head = get_zone_list_by_type(type);
+	if (type == TINY)
+		zone_size = get_tiny_zone_size();
+	else if (type == SMALL)
+		zone_size = get_small_zone_size();
+	else
+		zone_size = aligned_bytes;
+	new_zone = create_zone(zone_size, type);
+	if (!new_zone)
+		return (NULL);
+	if (!*zone_list_head)
+		*zone_list_head = new_zone;
+	else
+	{
+		current = *zone_list_head;
+		while (current->next)
+			current = current->next;
+		current->next = new_zone;
+	}
+	return (new_zone);
 }

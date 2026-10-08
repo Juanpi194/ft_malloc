@@ -6,7 +6,7 @@
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:49:30 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/05 21:57:34 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/08 11:21:20 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 // TODO: FIX THIS FUNCTION TO SHOW THE CORRECT ADDRESSES AND BYTES USED
 
-MALLOC_NONNULL(1)
 static void	show_mem_zone(t_zone *zone)
 {
 	t_block	*current_block;
