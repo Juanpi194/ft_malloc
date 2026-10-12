@@ -6,7 +6,7 @@
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 14:18:04 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/08 14:33:21 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/12 19:12:48 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,6 @@ t_block	*allocate_from_new_zone(const t_zone_type type, const size_t aligned_byt
 	new_zone = link_new_zone(aligned_bytes, type);
 	if (!new_zone)
 		return (NULL);
+	write(1, "[DEBUG] Zona nueva creada. Size primer bloque: ", 47);
 	return (allocate_existing_block(new_zone->blocks, aligned_bytes));
 }

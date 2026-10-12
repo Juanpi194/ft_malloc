@@ -19,6 +19,8 @@ LIBFT = libft/libft.a
 
 
 SRCS = main.c \
+		src/free/free.c \
+		src/free/joining.c \
 		src/malloc/allocations.c \
 		src/malloc/block_utils.c \
 		src/malloc/ft_malloc.c \

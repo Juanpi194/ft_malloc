@@ -6,7 +6,7 @@
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:42:19 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/08 15:06:45 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/12 18:13:49 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,14 @@
  * @example	TINY_MAX = 128; sizeof(t_block) = 32 -> TINY_ZONE_SIZE = 16.000.
  * @note	It is the raw value, not the multiple of PAGESIZE.
  */
-# define TINY_ZONE_SIZE		(BLOCKS_PER_ZONE * (TINY_MAX + sizeof(t_block)))
+# define TINY_ZONE_SIZE		(BLOCKS_PER_ZONE * (TINY_MAX + sizeof(t_block)) + sizeof(t_zone))
 /**
  * @brief	The size of a tiny zone. The header size is included in the result
  * 			(sizeof(t_block)).
  * @example	TINY_MAX = 1024; sizeof(t_block) = 32 -> TINY_ZONE_SIZE = 105.600.
  * @note	It is the raw value, not the multiple of PAGESIZE.
  */
-# define SMALL_ZONE_SIZE	(BLOCKS_PER_ZONE * (SMALL_MAX + sizeof(t_block)))
+# define SMALL_ZONE_SIZE	(BLOCKS_PER_ZONE * (SMALL_MAX + sizeof(t_block)) + sizeof(t_zone))
 
 /**
  * @brief	Header of the memory block.
@@ -120,6 +120,8 @@ void	*realloc(void *ptr, size_t size);
 void	show_alloc_mem(void);
 
 // ----------------------------------------------------------------------------
+
+// MALLOC ---------------------------------------------------------------------
 
 /**
  * @brief	Creates a new memory zone and appends it to the global zone list.
@@ -220,5 +222,14 @@ t_block	*allocate_existing_block(t_block *block, const size_t aligned_bytes);
  * @return	Pointer to the assigned `t_block`, or `NULL` if zone creation failed.
  */
 t_block	*allocate_from_new_zone(const t_zone_type type, const size_t aligned_bytes);
+
+// FREE -----------------------------------------------------------------------
+
+/**
+ * @brief	Joins blocks that are next to the provided block and are free,
+ * 			so more space is guaranteed for future allocations.
+ * @param	block	The block to be evaluated.
+ */
+void	join_nearby_blocks(t_block *block);
 
 #endif
