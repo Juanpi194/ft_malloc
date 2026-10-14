@@ -6,7 +6,7 @@
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:48:49 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/12 18:36:35 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/14 18:18:22 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,7 @@ t_zone	*link_new_zone(const size_t aligned_bytes, const t_zone_type type)
 	else if (type == SMALL)
 		zone_size = get_small_zone_size();
 	else
-		zone_size = aligned_bytes;	// ! FIX: It must be aligned and have the payloads. Fix below:
-		/**
-		 *	size_t total_needed = aligned_bytes + sizeof(t_zone) + sizeof(t_block);
-         *	size_t page_size = getpagesize();
-         *	zone_size = (total_needed + (page_size - 1)) & ~(page_size - 1);
-		 */
+		zone_size = get_large_zone_size(aligned_bytes);
 	new_zone = create_zone(zone_size, type);
 	if (!new_zone)
 		return (NULL);

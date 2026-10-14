@@ -6,7 +6,7 @@
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:42:19 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/12 18:13:49 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/14 16:08:12 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,10 @@ void	free(void *ptr);
 void	*malloc(size_t size);
 void	*realloc(void *ptr, size_t size);
 
+/**
+ * @brief	Prints in `DEFAULT_FD` all the necessary information about the
+ * 			memory allocations the way the subject requests to.
+ */
 void	show_alloc_mem(void);
 
 // ----------------------------------------------------------------------------
@@ -231,5 +235,9 @@ t_block	*allocate_from_new_zone(const t_zone_type type, const size_t aligned_byt
  * @param	block	The block to be evaluated.
  */
 void	join_nearby_blocks(t_block *block);
+
+// REALLOC --------------------------------------------------------------------
+
+// TODO: Realloc functions
 
 #endif

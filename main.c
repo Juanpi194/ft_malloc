@@ -1,89 +1,42 @@
 #include "ft_malloc.h"
-#include <stdio.h>
-
-#include "ft_malloc.h"
-#include <stdio.h>
-
-/**
- * @brief Recorre una lista de zonas e imprime sus bloques asociados.
- */
-static void print_zone_list(const char *title, const t_zone *head)
-{
-    const t_zone  *current_zone;
-    const t_block *current_block;
-    int           zone_index;
-    int           block_index;
-
-    printf("\n=== ZONAS %s ===\n", title);
-    if (!head)
-    {
-        printf(" (Lista vacía)\n");
-        return ;
-    }
-    current_zone = head;
-    zone_index = 1;
-    while (current_zone)
-    {
-        printf("📍 ZONA #%d [Dirección: %p] | Size: %zu B | next_zone: %p\n",
-            zone_index++, (void *)current_zone, current_zone->total_size, (void *)current_zone->next);
-        printf("----------------------------------------------------------------------\n");
-        current_block = current_zone->blocks;
-        block_index = 1;
-        while (current_block)
-        {
-            printf("  └─ Bloque #%-2d | Header: %p | User Data: %p | Size: %5zu B | %s\n",
-                block_index++,
-                (void *)current_block,
-                (void *)(current_block + 1),
-                current_block->size,
-                current_block->is_free ? "🟢 LIBRE" : "🔴 OCUPADO");
-            current_block = current_block->next;
-        }
-        current_zone = current_zone->next;
-    }
-}
-
-/**
- * @brief Imprime el estado completo de g_zones en la consola.
- */
-void print_global_zones_state(void)
-{
-    print_zone_list("TINY", g_zones.tiny_zones);
-    print_zone_list("SMALL", g_zones.small_zones);
-    print_zone_list("LARGE", g_zones.large_zones);
-}
+#include <unistd.h>
 
 int main(void)
 {
-    printf("=== 1. RESERVA DE MEMORIA (TINY, SMALL, LARGE) ===\n");
-    void *ptr_small = malloc(512);     /* SMALL */
-    void *ptr_tiny  = malloc(64);       /* TINY */
-    void *ptr_large = malloc(100000);   /* LARGE */
+	ft_putstr_fd("=== 1. RESERVAS DE PRUEBA ===\n", DEFAULT_FD);
+	
+	/* Reservas en TINY */
+	void *t1 = malloc(32);
+	void *t2 = malloc(64);
+	void *t3 = malloc(128);
 
-    printf("TINY  (64B):   %p\n", ptr_tiny);
-    printf("SMALL (2048B): %p\n", ptr_small);
-    printf("LARGE (100KB): %p\n", ptr_large);
+	/* Reservas en SMALL */
+	void *s1 = malloc(512);
+	void *s2 = malloc(1024);
 
-    printf("\n--- Estado de las zonas tras malloc ---\n");
-    print_global_zones_state();
+	/* Reserva en LARGE */
+	void *l1 = malloc(100000);
 
-    printf("\n=== 2. PRUEBA DE FREE Y COALESCING ===\n");
-    free(ptr_tiny);
-    free(ptr_large);
+	ft_putstr_fd("\n--- Estado de la memoria con todas las reservas activas ---\n", DEFAULT_FD);
+	show_alloc_mem();
 
-    printf("\n--- Estado tras free(TINY) y free(LARGE) ---\n");
-    print_global_zones_state();
+	ft_putstr_fd("\n=== 2. LIBERACIÓN PARCIAL (Prueba de filtrado de bloques libres) ===\n", DEFAULT_FD);
+	/* Liberamos t2 y s1.
+	   show_alloc_mem NO debe mostrar t2 ni s1, ni sumar sus bytes al total */
+	free(t2);
+	free(s1);
 
-    printf("\n=== 3. PRUEBAS DE SEGURIDAD (Sin crash) ===\n");
-    free(NULL);
-    free((void *)0xDEADBEEF);
-    printf("OK: Punteros invalidos ignorados correctamente.\n");
+	ft_putstr_fd("\n--- Estado tras liberar t2 (64B) y s1 (512B) ---\n", DEFAULT_FD);
+	show_alloc_mem();
 
-	printf("\n=== 4. OTRO FREE (Sin crash) ===\n");
-	free(ptr_small);
+	ft_putstr_fd("\n=== 3. LIBERACIÓN TOTAL ===\n", DEFAULT_FD);
+	free(t1);
+	free(t3);
+	free(s2);
+	free(l1);
 
-    printf("\n--- Estado tras free(SMALL) ---\n");
-    print_global_zones_state();
+	ft_putstr_fd("\n--- Estado tras liberar todo ---\n", DEFAULT_FD);
+	show_alloc_mem();
 
-    return (0);
+	return (0);
 }
