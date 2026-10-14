@@ -19,11 +19,12 @@ LIBFT = libft/libft.a
 
 
 SRCS = main.c \
-		src/free/free.c \
+		src/free/ft_free.c \
 		src/free/joining.c \
 		src/malloc/allocations.c \
 		src/malloc/block_utils.c \
 		src/malloc/ft_malloc.c \
+		src/realloc/ft_realloc.c \
 		src/zones/link_zone.c \
 		src/zones/zone_sizes.c \
 		src/zones/zone_getters.c \

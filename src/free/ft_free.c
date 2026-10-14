@@ -6,7 +6,7 @@
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:47:27 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/12 17:50:41 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/14 18:29:44 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
  * @param	ptr		The address of the data to be freed.
  * @returns	The block that points to `ptr`. `NULL` otherwise.
  */
+MALLOC_UNUSED_RESULT
 static t_block	*search_block_in_zone(t_zone *zone, const void *ptr)
 {
 	t_zone	*current_zone;
@@ -42,31 +43,6 @@ static t_block	*search_block_in_zone(t_zone *zone, const void *ptr)
 		}
 		current_zone = current_zone->next;
 	}
-	return (NULL);
-}
-
-/**
- * @brief	Tries to find the block that points to the data with the provided
- * 			address in each different zone (TINY, SMALL, LARGE) from the
- * 			global variable `g_zones`.
- * @param	ptr	The address of the zone to be searched.
- * @returns	The block that points to `ptr`. `NULL` otherwise.
- */
-static void	*find_block_by_ptr(const void *ptr)
-{
-	t_block	*found_block;
-
-	if (!ptr)
-		return (NULL);
-	found_block = search_block_in_zone(g_zones.tiny_zones, ptr);
-	if (found_block)
-		return (found_block);
-	found_block = search_block_in_zone(g_zones.small_zones, ptr);
-	if (found_block)
-		return (found_block);
-	found_block = search_block_in_zone(g_zones.large_zones, ptr);
-	if (found_block)
-		return (found_block);
 	return (NULL);
 }
 
@@ -95,6 +71,24 @@ static void	unmap_large_zone(t_zone *zone_to_free)
 			prev_zone->next = zone_to_free->next;
 	}
 	munmap(zone_to_free, zone_to_free->total_size);
+}
+
+void	*find_block_by_ptr(const void *ptr)
+{
+	t_block	*found_block;
+
+	if (!ptr)
+		return (NULL);
+	found_block = search_block_in_zone(g_zones.tiny_zones, ptr);
+	if (found_block)
+		return (found_block);
+	found_block = search_block_in_zone(g_zones.small_zones, ptr);
+	if (found_block)
+		return (found_block);
+	found_block = search_block_in_zone(g_zones.large_zones, ptr);
+	if (found_block)
+		return (found_block);
+	return (NULL);
 }
 
 void	free(void *ptr)

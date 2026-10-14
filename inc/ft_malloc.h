@@ -6,7 +6,7 @@
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:42:19 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/14 16:08:12 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/14 18:40:42 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,15 +191,6 @@ MALLOC_UNUSED_RESULT MALLOC_RETURNS_NONNULL
 t_zone		**get_zone_list_by_type(const t_zone_type type);
 
 /**
- * @brief	Alignes the number of bytes provided to a multiple of the variable
- * 			`ALIGNMENT`, for more efficency.
- * @param	bytes	The number of bytes provided.
- * @returns	The first multiple of the variable `ALIGNMENT` that is bigger than
- * 			`bytes`.
- */
-size_t	align_bytes(const size_t bytes);
-
-/**
  * @brief	Prepares and marks an already located free block as occupied.
  *
  * Checks if the available block can be split into two (the requested size
@@ -239,5 +230,26 @@ void	join_nearby_blocks(t_block *block);
 // REALLOC --------------------------------------------------------------------
 
 // TODO: Realloc functions
+
+// GENERAL --------------------------------------------------------------------
+
+/**
+ * @brief	Alignes the number of bytes provided to a multiple of the variable
+ * 			`ALIGNMENT`, for more efficency.
+ * @param	bytes	The number of bytes provided.
+ * @returns	The first multiple of the variable `ALIGNMENT` that is bigger than
+ * 			`bytes`.
+ */
+size_t	align_bytes(const size_t bytes);
+
+/**
+ * @brief	Tries to find the block that points to the data with the provided
+ * 			address in each different zone (TINY, SMALL, LARGE) from the
+ * 			global variable `g_zones`.
+ * @param	ptr	The address of the zone to be searched.
+ * @returns	The block that points to `ptr`. `NULL` otherwise.
+ * @note	Used by `free` and `realloc`.
+ */
+void	*find_block_by_ptr(const void *ptr);
 
 #endif
