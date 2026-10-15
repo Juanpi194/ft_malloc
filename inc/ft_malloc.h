@@ -6,7 +6,7 @@
 /*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:42:19 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/14 18:40:42 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/15 14:59:21 by juanpi194        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,21 @@
 # include "libft.h"
 # include "ft_printf.h"
 # include "get_next_line.h"
+
+// BONUS ----------------------------------------------------------------------
+
+#include <pthread.h>
+
+/**
+ * @brief	Mutex that will be used every time `malloc`, `free` or `realloc`
+ * 			are used.
+ * @note	It will be configured as a recursive mutex, which means
+ * 			it can be locked multiple times, but it has to be unlocked that
+ * 			many times.
+ */
+extern pthread_mutex_t	g_zones_mutex;
+
+// ----------------------------------------------------------------------------
 
 # define DEFAULT_FD 1
 # define ERR_FD 	2

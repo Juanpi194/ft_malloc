@@ -8,5 +8,6 @@
 #define MALLOC_UNUSED_RESULT	__attribute__((warn_unused_result))
 #define MALLOC_RETURNS_NONNULL	__attribute__((returns_nonnull))
 #define MALLOC_ALWAYS_INLINE	__attribute__((__always_inline__))
+#define MALLOC_CONSTRUCTOR		__attribute__((constructor))
 
 #endif
