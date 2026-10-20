@@ -44,6 +44,9 @@ $(LIBFT):
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+lint:
+	norminette src
+
 clean:
 	$(MAKE) -C $(LIBFT_FOLDER) clean
 	rm -f $(OBJS)
