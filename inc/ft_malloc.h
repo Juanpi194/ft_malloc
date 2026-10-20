@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_malloc.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
+/*   By: jvizcain <jvizcain@students.42madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:42:19 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/15 14:59:21 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/20 14:40:43 by jvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 // BONUS ----------------------------------------------------------------------
 
-#include <pthread.h>
+# include <pthread.h>
 
 /**
  * @brief	Mutex that will be used every time `malloc`, `free` or `realloc`
@@ -128,15 +128,15 @@ extern t_reserved_zones	g_zones;
 
 // MANDATORY ------------------------------------------------------------------
 
-void	free(void *ptr);
-void	*malloc(size_t size);
-void	*realloc(void *ptr, size_t size);
+void		free(void *ptr);
+void		*malloc(size_t size);
+void		*realloc(void *ptr, size_t size);
 
 /**
  * @brief	Prints in `DEFAULT_FD` all the necessary information about the
  * 			memory allocations the way the subject requests to.
  */
-void	show_alloc_mem(void);
+void		show_alloc_mem(void);
 
 // ----------------------------------------------------------------------------
 
@@ -156,7 +156,7 @@ void	show_alloc_mem(void);
  * @return	Pointer to the newly created and linked `t_zone`, or `NULL` if 
  *			allocation via `create_zone` failed.
  */
-t_zone	*link_new_zone(const size_t aligned_bytes, const t_zone_type type);
+t_zone		*link_new_zone(const size_t aligned_bytes, const t_zone_type type);
 
 /**
  * @brief	Gets a block of memory with the ammount of bytes requested.
@@ -166,19 +166,19 @@ t_zone	*link_new_zone(const size_t aligned_bytes, const t_zone_type type);
  * 			of `ALIGNMENT`.
  */
 MALLOC_UNUSED_RESULT
-t_block	*request_block(const size_t requested_bytes);
+t_block		*request_block(const size_t requested_bytes);
 
 /**
  * @brief	Calcs the exact needed bytes for a tiny zone.
  * @returns	The exact needed bytes for a tiny zone.
  */
-size_t	get_tiny_zone_size(void);
+size_t		get_tiny_zone_size(void);
 
 /**
  * @brief	Calcs the exact needed bytes for a small zone.
  * @returns	The exact needed bytes for a small zone.
  */
-size_t	get_small_zone_size(void);
+size_t		get_small_zone_size(void);
 
 /**
  * @brief	Calcs the exact needed bytes for a large zone.
@@ -186,7 +186,7 @@ size_t	get_small_zone_size(void);
  * 							This number should not include the headers.
  * @returns	The exact needed bytes for a large zone.
  */
-size_t	get_large_zone_size(const size_t requested_bytes);
+size_t		get_large_zone_size(const size_t requested_bytes);
 
 /**
  * @brief	Returns the zone type that matches the requested bytes.
@@ -217,10 +217,12 @@ t_zone		**get_zone_list_by_type(const t_zone_type type);
  *
  * @return	Pointer to the prepared `t_block` marked as occupied.
  */
-t_block	*allocate_existing_block(t_block *block, const size_t aligned_bytes);
+t_block		*allocate_existing_block(t_block *block,
+				const size_t aligned_bytes);
 
 /**
- * @brief	Allocates a new zone, appends it to g_zones, and claims its first block.
+ * @brief	Allocates a new zone, appends it to g_zones,
+ * 			and claims its first block.
  *
  * Called when no existing zone has a free block large enough for the request.
  * Creates a new `t_zone` via mmap, links it to the corresponding global list in
@@ -231,7 +233,8 @@ t_block	*allocate_existing_block(t_block *block, const size_t aligned_bytes);
  *
  * @return	Pointer to the assigned `t_block`, or `NULL` if zone creation failed.
  */
-t_block	*allocate_from_new_zone(const t_zone_type type, const size_t aligned_bytes);
+t_block		*allocate_from_new_zone(const t_zone_type type,
+				const size_t aligned_bytes);
 
 // FREE -----------------------------------------------------------------------
 
@@ -240,7 +243,7 @@ t_block	*allocate_from_new_zone(const t_zone_type type, const size_t aligned_byt
  * 			so more space is guaranteed for future allocations.
  * @param	block	The block to be evaluated.
  */
-void	join_nearby_blocks(t_block *block);
+void		join_nearby_blocks(t_block *block);
 
 // REALLOC --------------------------------------------------------------------
 
@@ -255,7 +258,7 @@ void	join_nearby_blocks(t_block *block);
  * @returns	The first multiple of the variable `ALIGNMENT` that is bigger than
  * 			`bytes`.
  */
-size_t	align_bytes(const size_t bytes);
+size_t		align_bytes(const size_t bytes);
 
 /**
  * @brief	Tries to find the block that points to the data with the provided
@@ -265,6 +268,6 @@ size_t	align_bytes(const size_t bytes);
  * @returns	The block that points to `ptr`. `NULL` otherwise.
  * @note	Used by `free` and `realloc`.
  */
-void	*find_block_by_ptr(const void *ptr);
+void		*find_block_by_ptr(const void *ptr);
 
 #endif

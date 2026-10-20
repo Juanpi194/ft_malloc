@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   link_zone.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
+/*   By: jvizcain <jvizcain@students.42madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:48:49 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/14 18:18:22 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/20 14:16:15 by jvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ static void	init_zone(t_zone *zone, size_t bytes, const t_zone_type type)
  * 			bytes adjustes better to the specified ones.
  */
 MALLOC_UNUSED_RESULT
-static t_zone	*create_zone(const size_t total_aligned_bytes, const t_zone_type type)
+static t_zone	*create_zone(const size_t total_aligned_bytes,
+								const t_zone_type type)
 {
 	t_zone	*zone;
 

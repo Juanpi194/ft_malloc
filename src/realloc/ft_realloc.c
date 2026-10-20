@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_realloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
+/*   By: jvizcain <jvizcain@students.42madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:47:33 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/15 15:03:07 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/20 14:36:09 by jvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,12 @@ static void	split_block(t_block *initial_block, const size_t requested_bytes)
  * 			this two blocks. That implies that `block->next` will never be
  * 			`NULL`.
  */
-MALLOC_NONNULL(0)
 static void	amplification(t_block *block, const size_t aligned_size)
 {
 	t_block	*next_block;
 
+	if (!block)
+		return ;
 	next_block = block->next;
 	if (!next_block)
 		return ;
@@ -101,8 +102,10 @@ static void	amplification(t_block *block, const size_t aligned_size)
  * @param	size	The new size of the new memory zone.
  * @returns	The new memory zone if the reallocation was successfull.
  * 			`NULL` otherwise.
+ * @note	Because of Norminette, this attribute was deleted:
+ * 			`MALLOC_NONNULL(0, 1)`
  */
-MALLOC_UNUSED_RESULT MALLOC_NONNULL(0, 1)
+MALLOC_UNUSED_RESULT
 static void	*reallocation(void *old_ptr, t_block *old_block, const size_t size)
 {
 	void	*new_ptr;

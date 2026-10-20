@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   block_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
+/*   By: jvizcain <jvizcain@students.42madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:49:10 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/08 15:09:06 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/20 14:12:39 by jvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@
  * @returns	The block in the zone that has enough bytes for the requested
  * 			bytes, `NULL` otherwise or if `zone` is `NULL`.
  */
-MALLOC_UNUSED_RESULT 
-static t_block	*find_free_block(t_zone *zone_list, const size_t requested_bytes)
+MALLOC_UNUSED_RESULT
+static t_block	*find_free_block(t_zone *zone_list,
+									const size_t requested_bytes)
 {
 	t_zone	*current_z;
 	t_block	*current_b;

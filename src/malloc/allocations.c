@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   allocations.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
+/*   By: jvizcain <jvizcain@students.42madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 14:18:04 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/14 15:05:06 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/20 14:13:14 by jvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@
  * 			will remain, and that is not enough for a new header block
  * 			(`sizeof(t_block)`) and the minimum size (`ALIGNMENT`).
  */
-static int	can_block_split(const t_block *block, const size_t requested_bytes)
+static int	can_block_split(const t_block *block,
+							const size_t requested_bytes)
 {
 	if (!block)
 		return (FALSE);
@@ -55,7 +56,7 @@ static void	split_block(t_block *initial_block, const size_t requested_bytes)
 	original_size = initial_block->size;
 	initial_block->size = requested_bytes;
 	new_next = (t_block *)((char *)initial_block + (
-			sizeof(t_block) + requested_bytes));
+				sizeof(t_block) + requested_bytes));
 	new_next->next = initial_block->next;
 	if (new_next->next)
 		new_next->next->prev = new_next;
@@ -73,7 +74,8 @@ t_block	*allocate_existing_block(t_block *block, const size_t aligned_bytes)
 	return (block);
 }
 
-t_block	*allocate_from_new_zone(const t_zone_type type, const size_t aligned_bytes)
+t_block	*allocate_from_new_zone(const t_zone_type type,
+								const size_t aligned_bytes)
 {
 	t_zone	*new_zone;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   show_alloc_mem.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juanpi194 <juanpi194@student.42.fr>        +#+  +:+       +#+        */
+/*   By: jvizcain <jvizcain@students.42madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/05 13:49:30 by juanpi194         #+#    #+#             */
-/*   Updated: 2026/10/14 16:06:10 by juanpi194        ###   ########.fr       */
+/*   Updated: 2026/10/20 14:10:53 by jvizcain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static size_t	print_zone_blocks(const char *zone_str, const t_zone *zone)
 	t_block	*current_block;
 	void	*start;
 
-	total_bytes = 0;	
+	total_bytes = 0;
 	while (zone)
 	{
 		ft_printf("%s : %p\n", zone_str, zone);
